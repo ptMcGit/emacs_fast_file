@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+#!/bin/bash
+
+export _MY_CHEAT_SHEETS_DIR=${HOME}/From_zarf/cheat_sheets/
+
+
+emacs_fast_file_load ()
+{
+    local t_file=${t_dir}/${2}
+    if ! emacsclient -n $t_file; then
+        emacs $t_file
+    fi
+}
+
+_ff_home_folder_completion ()
+{
+    t_dir=${HOME}
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+
+    COMPREPLY=( $(compgen -W '$(command ls -1A $t_dir)' -- $cur) )
+}
+
+
+_ff_cheat_sheet_completion ()
+{
+    t_dir=${HOME}/From_zarf/cheat_sheets
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+
+    COMPREPLY=( $(compgen -W '$(command ls -1A $t_dir)' -- $cur) )
+}
+
+
+_fast_file_completion ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD - 1]}"
+
+    case "$prev" in
+        -c)
+            _ff_cheat_sheet_completion
+            return
+            ;;
+        -h)
+            _ff_home_folder_completion
+            return
+            ;;
+    esac
+
+    COMPREPLY=( $(compgen -W '-c -h') -- $cur)
+}
+
+complete -F _fast_file_completion emacs_fast_file_load
