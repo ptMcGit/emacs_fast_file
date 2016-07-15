@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-#!/bin/bash
-
-export _MY_CHEAT_SHEETS_DIR=${HOME}/From_zarf/cheat_sheets/
-
+_MY_FAST_FILE_DIR=${HOME}/.fast_file
 
 emacs_fast_file_load ()
 {
@@ -22,9 +19,9 @@ _ff_home_folder_completion ()
 }
 
 
-_ff_cheat_sheet_completion ()
+_fast_file_dir_completion ()
 {
-    t_dir=${HOME}/From_zarf/cheat_sheets
+    t_dir=$_MY_FAST_FILE_DIR
     local cur="${COMP_WORDS[COMP_CWORD]}"
 
     COMPREPLY=( $(compgen -W '$(command ls -1A $t_dir)' -- $cur) )
@@ -37,8 +34,8 @@ _fast_file_completion ()
     local prev="${COMP_WORDS[COMP_CWORD - 1]}"
 
     case "$prev" in
-        -c)
-            _ff_cheat_sheet_completion
+        -f)
+            _fast_file_dir_completion
             return
             ;;
         -h)
@@ -47,7 +44,7 @@ _fast_file_completion ()
             ;;
     esac
 
-    COMPREPLY=( $(compgen -W '-c -h') -- $cur)
+    COMPREPLY=( $(compgen -W '-f -h') -- $cur)
 }
 
-complete -F _fast_file_completion emacs_fast_file_load
+complete -F _fast_file_completion emacs_fast_file
